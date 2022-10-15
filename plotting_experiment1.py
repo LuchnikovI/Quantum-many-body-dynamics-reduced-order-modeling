@@ -29,9 +29,8 @@ for i, (root, dirs, files) in enumerate(os.walk("./experiment1_data")):
         initial_state = initial_state[jnp.newaxis]
         system_qubit = params['system_qubit']
         first_row = 2 * jnp.log(2) * jax.nn.one_hot(jnp.array(system_qubit), n)[jnp.newaxis]
-        # there is a small mistake in the uploaded mutual information, thus it requires slight rescaling an shift
-        subdata['controlled_mutual_information'] = jnp.concatenate([first_row, (load_data(os.path.join(root, 'controlled_mutual_information.pickle')) + 2 * jnp.log(2)) / 2], axis=0)
-        subdata['zero_control_mutual_information'] = jnp.concatenate([first_row, (load_data(os.path.join(root, 'zero_control_mutual_information.pickle')) + 2 * jnp.log(2)) / 2], axis=0)
+        subdata['controlled_mutual_information'] = jnp.concatenate([first_row, load_data(os.path.join(root, 'controlled_mutual_information.pickle'))], axis=0)
+        subdata['zero_control_mutual_information'] = jnp.concatenate([first_row, load_data(os.path.join(root, 'zero_control_mutual_information.pickle'))], axis=0)
         subdata['exact_dynamics_zero_control'] = rho2bloch(jnp.concatenate([initial_state, load_data(os.path.join(root, 'zero_control_exact_density_matrices.pickle'))[:, system_qubit]], axis=0))
         subdata['ro_based_dynamics_zero_control'] = rho2bloch(jnp.concatenate([initial_state, load_data(os.path.join(root, 'zero_control_ro_based_density_matrices.pickle'))], axis=0))
         subdata['exact_dynamics_controlled'] = rho2bloch(jnp.concatenate([initial_state, load_data(os.path.join(root, 'controlled_exact_density_matrices.pickle'))[:, system_qubit]], axis=0))
